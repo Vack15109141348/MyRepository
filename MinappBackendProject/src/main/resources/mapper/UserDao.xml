@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhcc.dao.UserDao">
+
+    <resultMap type="com.dhcc.entity.User" id="UserMap">
+        <result property="userid" column="userid" jdbcType="INTEGER"/>
+        <result property="userclass" column="userclass" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserMap">
+        select
+        userid, userclass, username, gender, password
+        from wechatproject.user
+        where userid = #{userid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserMap">
+        select
+        userid, userclass, username, gender, password
+        from wechatproject.user
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="UserMap">
+        select
+        userid, userclass, username, gender, password
+        from wechatproject.user
+        <where>
+            <if test="userid != null">
+                and userid = #{userid}
+            </if>
+            <if test="userclass != null">
+                and userclass = #{userclass}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="gender != null and gender != ''">
+                and gender = #{gender}
+            </if>
+            <if test="password != null">
+                and password = #{password}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userid" useGeneratedKeys="true">
+        insert into wechatproject.user(userid,userclass, username, gender, password)
+        values (#{userid},#{userclass}, #{username}, #{gender}, #{password})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update wechatproject.user
+       set    password = #{password}
+        where userid = #{userid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wechatproject.user where userid = #{userid}
+    </delete>
+
+</mapper>
